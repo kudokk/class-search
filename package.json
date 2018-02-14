@@ -1,0 +1,12 @@
+{
+  "name": "class-search",
+  "bin": "bin/class-search",
+  "version": "1.0.0",
+  "description": "search no-use class of css",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "author": "kudo",
+  "license": "ISC"
+}
