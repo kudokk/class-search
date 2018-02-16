@@ -1,5 +1,0 @@
-----------
-test1.txt
-texttext
-naze
-----------

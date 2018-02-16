@@ -1,29 +1,47 @@
 const fs = require('fs');
-const dirPath = 'test/expect/';
+const dirPath = 'test/expect/css/';
 let textObj = {};
 textObj.ab = "java\nscript";
-console.log(textObj.ab);
 
-// ファイルネームを投げたらtextが取れる
+// ファイルネームを投げたら１行のtextが取れる
 const rf = (fileName) => {
-   textObj[fileName] = fs.readFileSync(dirPath + fileName).toString().split('\n');
+   textObj[fileName] = fs.readFileSync(dirPath + fileName).toString();
 };
 
-// dataの書き出し
-const wf = (data) => {
-  fs.appendFile(dirPath + 'message.txt', data, (err) => {
-    if (err) {
-      console.log(err);
-    }
-    console.log('The file has been saved!');
-  });
+//改行とスペースとセミコロンの削除
+const cr = (fileName) => {
+  textObj[fileName] = textObj[fileName].replace(/\r?\n?\s|\;/g, '');
 }
+
+// 行の取得
+const gl = (fileName) => {
+  textObj[fileName] = textObj[fileName].match(/\.[^}]*\}/g);
+}
+
+// ファイルの上書き
+const wf = () => {
+  fs.writeFileSync(dirPath + '../message.txt', '');
+}
+
+// dataの書き出し
+const afd = (data) => {
+  fs.appendFileSync(dirPath + '../message.txt', data);
+}
+
+// 各ファイルへのアクセス
+const af = (fileName) => {
+  textObj[fileName].map(afd);
+}
+
 
 // ディレクトリ内のファイル読み込み
 const rd = (dirPath) => {
   return fs.readdirSync(dirPath);
 }
 
-const fileNameObj = rd(dirPath);
-fileNameObj.map(rf);
-console.log(textObj);
+let fileNameArray = rd(dirPath);
+fileNameArray.map(rf);
+fileNameArray.map(cr);
+fileNameArray.map(gl);
+wf();
+fileNameArray.map(af);
