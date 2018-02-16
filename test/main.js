@@ -1,13 +1,12 @@
 const fs = require('fs');
 const dirPath = 'test/expect/';
 let textObj = {};
+textObj.ab = "java\nscript";
+console.log(textObj.ab);
 
-// ファイルネームを投げたらbufferが取れる
+// ファイルネームを投げたらtextが取れる
 const rf = (fileName) => {
-  const readableStream = fs.createReadStream(dirPath + fileName);
-  readableStream.on('data', function(data) {
-    return data.toString();
-  });
+   textObj[fileName] = fs.readFileSync(dirPath + fileName).toString().split('\n');
 };
 
 // dataの書き出し
@@ -20,12 +19,11 @@ const wf = (data) => {
   });
 }
 
-// ディレクトリの読み込み。ディレクトリ内のファイル取り出し
-fs.readdir(dirPath, (err, data) => {
-  if (err) {
-    console.log(err);
-  }
-  console.log(data);
-  textObj.ab = data.map(rf);
-  console.log(textObj);
-});
+// ディレクトリ内のファイル読み込み
+const rd = (dirPath) => {
+  return fs.readdirSync(dirPath);
+}
+
+const fileNameObj = rd(dirPath);
+fileNameObj.map(rf);
+console.log(textObj);
