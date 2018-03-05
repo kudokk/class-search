@@ -1,5 +1,6 @@
 const fs = require('fs');
 const dirPath = 'test/expect/css/';
+const htmlDirPath = 'test/expect/html/';
 let textObj = {};
 
 // ファイルの削除
@@ -10,11 +11,21 @@ const ul = (fileName) => {
 // ファイルネームを投げたら１行のtextが取れる
 const rf = (fileName) => {
    textObj[fileName] = fs.readFileSync(dirPath + fileName).toString();
-};
+}
+
+// ファイルネームを投げたら１行のtextが取れる
+const rfh = (fileName) => {
+   textObj[fileName] = fs.readFileSync(htmlDirPath + fileName).toString();
+}
 
 // テキストの取得
 const gt = (fileName) => {
   return fs.readFileSync(dirPath + fileName).toString();
+}
+
+// 改行の削除
+const gl = (fileName) => {
+  textObj[fileName] = textObj[fileName].replace(/\r?\n/g, '');
 }
 
 //改行とスペースとセミコロンの削除
@@ -34,6 +45,16 @@ const gc = (string) => {
     classNamePlus[i] = classNamePlus[i].replace(/\{/, '');
   }
   return classNamePlus;
+}
+
+// classの取得（html）
+const gch = (string) => {
+  const classNamePlus = string.match(/class="[0-9a-z\s]*"/g);
+  for (var i = 0; i < classNamePlus.length; i++) {
+    classNamePlus[i] = classNamePlus[i].replace(/"/g, '');
+    classNamePlus[i] = classNamePlus[i].replace(/class=/, '');
+  }
+  return (classNamePlus);
 }
 
 // ファイルの上書き
@@ -67,5 +88,11 @@ fileNameArray.map(af);
 const classListString = gt('message.txt');
 const classListArray = gc(classListString);
 classListArray.map((e) => {console.log(e);})
+
+let htmlClassArray = rd(htmlDirPath);
+htmlClassArray.map(rfh);
+htmlClassArray.map(gl);
+const classListHtmlArray = gch(textObj['index.html']);
+console.log(classListHtmlArray);
 
 ul('message.txt');
