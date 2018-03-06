@@ -1,6 +1,8 @@
 {
   "name": "class-search",
-  "bin": "bin/class-search",
+  "bin": {
+    "class-search": "./index.js"
+  },
   "version": "1.0.0",
   "description": "search no-use class of css",
   "main": "index.js",
