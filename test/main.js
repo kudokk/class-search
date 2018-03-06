@@ -1,3 +1,8 @@
+const program = require('commander');
+program.option('-n, --name<value>', 'yourname', String)
+.parse(process.argv)
+console.log(program.name);
+
 const fs = require('fs');
 const dirPath = 'test/expect/css/';
 const htmlDirPath = 'test/expect/html/';
