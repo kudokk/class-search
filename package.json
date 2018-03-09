@@ -5,6 +5,9 @@
   },
   "version": "1.0.0",
   "description": "search no-use class of css",
+  "keywords": [
+    "gruntplugin"
+  ],
   "main": "index.js",
   "scripts": {
     "test": "mocha"
@@ -12,7 +15,6 @@
   "author": "kudo",
   "license": "ISC",
   "dependencies": {
-    "commander": "^2.14.1",
     "mocha": "^5.0.2"
   }
 }
