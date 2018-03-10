@@ -1,9 +1,6 @@
 {
   "name": "class-search",
-  "bin": {
-    "class-search": "./index.js"
-  },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "search no-use class of css",
   "keywords": [
     "gruntplugin"
