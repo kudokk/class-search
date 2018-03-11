@@ -123,6 +123,7 @@ module.exports = function(options) {
 
 
   let fileNameArray = rd(dirPath);
+  console.log(fileNameArray);
   fileNameArray.map(rf);
   fileNameArray.map(cr);
   fileNameArray.map(rc);
