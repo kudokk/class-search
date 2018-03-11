@@ -1,49 +1,50 @@
 module.exports = function (grunt) {
-    grunt.registerTask('class-search', 'sample task', function () {
-      const fs = require('fs');
-      const path = require('path');
-      const dirPath = 'test/expect';
-      let fileObj = {'html': [], 'htmlClass': [], 'css': [], 'cssClassRaw': [], 'cssClass': []};
+  grunt.initConfig({
+    src: {
+      dir: 'test/expect'
+    }
+  });
 
-      // ファイルネームを投げたら１行のtextが取れる
-      const rf = (fileName) => {
-         return fs.readFileSync(fileName).toString();
-      }
+  grunt.registerTask('class-search', function () {
+    const fs = require('fs');
+    const path = require('path');
+    const dirPath = grunt.config('src').dir;
+    let fileObj = {'html': [], 'htmlClass': [], 'css': [], 'cssClassRaw': [], 'cssClass': []};
 
-      // ファイルネームを投げたら１行のtextが取れる
-      const rfh = (fileName) => {
-         textObj['html'][fileName] = fs.readFileSync(htmlDirPath + fileName).toString();
-      }
+    // ファイルネームを投げたら１行のtextが取れる
+    const rf = (fileName) => {
+      return fs.readFileSync(fileName).toString();
+    }
 
-      // 改行の削除
-      const gl = (text) => {
-        return text.replace(/\r?\n/g, '');
-      }
+    // 改行の削除
+    const gl = (text) => {
+      return text.replace(/\r?\n/g, '');
+    }
 
-      //改行とスペースとセミコロンの削除,classRawの取得
-      const cr = (text) => {
-        text = text.replace(/\r?\n?\s|\;/g, '');
-        return text.match(/\.[^}]*\}/g);
-      }
+    //改行とスペースとセミコロンの削除,classRawの取得
+    const cr = (text) => {
+      text = text.replace(/\r?\n?\s|\;/g, '');
+      return text.match(/\.[^}]*\}/g);
+    }
 
-      // classRawの展開
-      const crt = (list) => {
-        list.map(e => { fileObj['cssClassRaw'].push(e)});
-      }
+    // classRawの展開
+    const crt = (list) => {
+      list.map(e => { fileObj['cssClassRaw'].push(e)});
+    }
 
-      // cssclassの展開
-      const ct = (list) => {
-        list.map(e => { fileObj['cssClass'].push(e)});
-      }
+    // cssclassの展開
+    const ct = (list) => {
+      list.map(e => { fileObj['cssClass'].push(e)});
+    }
 
-      // htmlclassの展開
-      const cth = (list) => {
-        list.map(e => { fileObj['htmlClass'].push(e)});
-      }
+    // htmlclassの展開
+    const cth = (list) => {
+      list.map(e => { fileObj['htmlClass'].push(e)});
+    }
 
-      // classの取得
-      const gc = (string) => {
-        const classNamePlus =  string.match(/\.[^{]*\{/g);
+    // classの取得
+    const gc = (string) => {
+      const classNamePlus =  string.match(/\.[^{]*\{/g);
         for (var i = 0; i < classNamePlus.length; i++) {
           classNamePlus[i] = classNamePlus[i].replace(/\.|\{/g, '');
         }
