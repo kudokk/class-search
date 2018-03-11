@@ -1,61 +1,37 @@
-const program = require('commander');
-program.option('-n, --name<value>', 'yourname', String)
-.parse(process.argv)
-console.log(program.name);
-
 const fs = require('fs');
-const dirPath = 'test/expect/css/';
-const htmlDirPath = 'test/expect/html/';
-let textObj = {'html': {}, 'css': {}};
-
-// ファイルの削除
-const ul = (fileName) => {
-  fs.unlinkSync(dirPath + fileName);
-}
-
-// ファイルの削除
-const ulh = (fileName) => {
-  fs.unlinkSync(htmlDirPath + fileName);
-}
+const path = require('path');
+const dirPath = 'test/expect';
+let fileObj = {'html': [], 'htmlClass': [], 'css': [], 'cssClassRaw': [], 'cssClass': []};
 
 // ファイルネームを投げたら１行のtextが取れる
 const rf = (fileName) => {
-   textObj['css'][fileName] = fs.readFileSync(dirPath + fileName).toString();
-}
-
-// ファイルネームを投げたら１行のtextが取れる
-const rfh = (fileName) => {
-   textObj['html'][fileName] = fs.readFileSync(htmlDirPath + fileName).toString();
-}
-
-// テキストの取得
-const gt = (fileName) => {
-  return fs.readFileSync(dirPath + fileName).toString();
-}
-
-// テキストの取得
-const gth = (fileName) => {
-  return fs.readFileSync(htmlDirPath + fileName).toString();
+   return fs.readFileSync(fileName).toString();
 }
 
 // 改行の削除
-const gl = (fileName) => {
-  textObj['html'][fileName] = textObj['html'][fileName].replace(/\r?\n/g, '');
+const gl = (text) => {
+  return text.replace(/\r?\n/g, '');
 }
 
-//改行とスペースとセミコロンの削除
-const cr = (fileName) => {
-  textObj['css'][fileName] = textObj['css'][fileName].replace(/\r?\n?\s|\;/g, '');
+//改行とスペースとセミコロンの削除,classRawの取得
+const cr = (text) => {
+  text = text.replace(/\r?\n?\s|\;/g, '');
+  return text.match(/\.[^}]*\}/g);
 }
 
-// classの配列追加
-const rc = (fileName) => {
-  textObj['css'][fileName] = textObj['css'][fileName].match(/\.[^}]*\}/g);
+// classRawの展開
+const crt = (list) => {
+  list.map(e => { fileObj['cssClassRaw'].push(e)});
 }
 
-// classの配列追加
-const rch = (fileName) => {
-  textObj['html'][fileName] = textObj['html'][fileName].match(/class="[0-9a-z\s\-\_]*"/g);
+// cssclassの展開
+const ct = (list) => {
+  list.map(e => { fileObj['cssClass'].push(e)});
+}
+
+// htmlclassの展開
+const cth = (list) => {
+  list.map(e => { fileObj['htmlClass'].push(e)});
 }
 
 // classの取得
@@ -83,68 +59,53 @@ const gch = (string) => {
   return (classNamePlus);
 }
 
-// ファイルの上書き
-const wf = () => {
-  fs.writeFileSync(dirPath + 'css.txt', '');
-}
+// cssファイルを,[css]key配下に絶対パスを配列として追加
+// htmlファイルを,[html]key配下に絶対パスを配列として追加
+const listFiles = (dir) => {
+  const paths = fs.readdirSync(dir);
+  paths.forEach(a => {
+    const path = `${dir}/${a}`;
 
-// dataの書き出し
-const afd = (data) => {
-  fs.appendFileSync(dirPath + 'css.txt', data);
-}
+    if (fs.statSync(path).isFile()) {
+      if (/.*\.css$/.test(path)) {
+        fileObj['css'].push(path);
+      }else if (/.*\.html$/.test(path)) {
+        fileObj['html'].push(path);
+      }
+    }
 
-// dataの書き出し
-const afdh = (data) => {
-  fs.appendFileSync(htmlDirPath + 'html.txt', data);
-}
-
-// 各ファイルへのアクセス
-const af = (fileName) => {
-  textObj['css'][fileName].map(afd);
-}
-
-// 各ファイルへのアクセス
-const afh = (fileName) => {
-  textObj['html'][fileName].map(afdh);
-}
-
-// ディレクトリ内のファイル読み込み
-const rd = (dirPath) => {
-  return fs.readdirSync(dirPath);
-}
+    if (fs.statSync(path).isDirectory()) {
+      listFiles(path);
+    }
+  })
+};
 
 // 不使用クラスを配列に
 const uc  = (className) => {
-  for (var i = 0; i < htmlClassListArray.length; i++) {
-    if (htmlClassListArray[i] === className) {
+  for (var i = 0; i < fileObj['htmlClass'].length; i++) {
+    if (className === fileObj['htmlClass'][i]) {
       return i;
     }
   }
   console.log(className);
 }
 
+// 指定ディレクトリ配下全て列挙
+listFiles(dirPath);
+//
+let cssTextArray = fileObj['css'].map(rf);
+cssTextArray = cssTextArray.map(cr);
+cssTextArray.map(crt);
+//
+let classListArray = fileObj['cssClassRaw'].map(gc);
+classListArray.map(ct);
+//
+//
+let htmlNameArray = fileObj['html'].map(rf);
+htmlNameArray = htmlNameArray.map(gl);
 
-let fileNameArray = rd(dirPath);
-fileNameArray.map(rf);
-fileNameArray.map(cr);
-fileNameArray.map(rc);
-fileNameArray.map(af);
-
-const classListString = gt('css.txt');
-const classListArray = gc(classListString);
-
-
-let htmlNameArray = rd(htmlDirPath);
-htmlNameArray.map(rfh);
-htmlNameArray.map(gl);
-htmlNameArray.map(rch);
-htmlNameArray.map(afh);
-
-const htmlClassListString = gth('html.txt');
-const htmlClassListArray = gch(htmlClassListString);
-
+const htmlClassListArray = htmlNameArray.map(gch);
+htmlClassListArray.map(cth);
 
 console.log('------un-use-classes------');
-let matchClassListArray = classListArray.map(uc);
-ul('css.txt');
-ulh('html.txt');
+let matchClassListArray = fileObj['cssClass'].map(uc);

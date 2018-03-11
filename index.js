@@ -1,11 +1,6 @@
 var spawn = require('./lib/myModule').spawn;
 
 module.exports = function(options) {
-  const program = require('commander');
-  program.option('-n, --name<value>', 'yourname', String)
-  .parse(process.argv)
-  console.log(program.name);
-
   const fs = require('fs');
   const dirPath = 'test/expect/css/';
   const htmlDirPath = 'test/expect/html/';
@@ -128,6 +123,7 @@ module.exports = function(options) {
 
 
   let fileNameArray = rd(dirPath);
+  console.log(fileNameArray);
   fileNameArray.map(rf);
   fileNameArray.map(cr);
   fileNameArray.map(rc);
