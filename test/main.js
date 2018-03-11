@@ -8,11 +8,6 @@ const rf = (fileName) => {
    return fs.readFileSync(fileName).toString();
 }
 
-// ファイルネームを投げたら１行のtextが取れる
-const rfh = (fileName) => {
-   textObj['html'][fileName] = fs.readFileSync(htmlDirPath + fileName).toString();
-}
-
 // 改行の削除
 const gl = (text) => {
   return text.replace(/\r?\n/g, '');
