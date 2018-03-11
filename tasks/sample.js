@@ -1,14 +1,9 @@
 module.exports = function (grunt) {
-  grunt.initConfig({
-    src: {
-      dir: 'test/expect'
-    }
-  });
 
   grunt.registerTask('class-search', function () {
     const fs = require('fs');
     const path = require('path');
-    const dirPath = grunt.config('src').dir;
+    const dirPath = grunt.config('search').dir;
     let fileObj = {'html': [], 'htmlClass': [], 'css': [], 'cssClassRaw': [], 'cssClass': []};
 
     // ファイルネームを投げたら１行のtextが取れる
